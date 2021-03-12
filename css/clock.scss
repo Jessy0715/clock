@@ -1,0 +1,222 @@
+//製作 indicator icon & their rotation
+@mixin make-indicator($idx, $indicator) {
+    &:nth-child( #{ $idx } ) {
+        transform: translate(-50%,-50%) rotate( $idx * 5deg);
+        &::after {
+            content: '#{$indicator}';
+            @content;
+        }
+    }
+};
+
+
+//製作 numbers
+@mixin make-numbers($idx) {
+    &:nth-child( #{ $idx } ) {
+        transform: translate(-50%,-50%) rotate($idx * 30deg);
+        &::before, &::after {
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+            display: block;
+        }
+        &::before {
+            content: '#{$idx + 12}';
+            transform: rotate( $idx * -30deg);
+        }
+        &::after {
+            content: '#{$idx}';
+            transform: translateY(25px) rotate( $idx * -30deg);
+        }
+    }
+};
+
+html,body {
+    background-color: #293B29;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;   //內容物畫面置中
+    height: 100vh;  //內容物畫面置中
+}
+.shadow-s {
+    //shadow 層層外擴
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), 0 0 50px rgba(0, 0, 0, 0.3),
+    0 0 100px rgba(0, 0, 0, 0.2);
+}
+ul {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0;
+}
+.clock {
+    width: 350px;
+    height: 350px;
+    background-color: #3d5a45;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &--radius {
+        border-radius: 20%;
+    }
+    &__inside {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        border: 3px solid #233318;
+        background-color: #293c29;
+        position: relative;
+    }
+}
+.indicators {
+    margin-bottom: 0;
+    &__item {
+        position: absolute;
+        top: 50%;
+        left: 50%;  //點位在 clock__inside範圍的中心點
+
+        width: calc(100% - 35px);
+        height: calc(100% - 35px); //點位在 clock__inside 範圍左上角
+
+        text-align: center; //點位在 clock__inside 方形上邊的正中央
+        // &::after {
+        //     content: '.'; //變數
+        //     display: block;
+        //     color: #FFF;
+        // }
+        // &--1 {
+        //     transform: translate(-50%,-50%) rotate(5deg); //變數
+        // }
+        // &--2 {
+        //     transform: translate(-50%,-50%) rotate(10deg); //變數
+        // }
+
+
+        //製造不同時鐘icon，順時針開始，6的倍數為 | ，3的倍數且不是6的倍數為 ✦，不是3也不是6的倍數為.
+        @for $i from 1 through 72 {
+            @if $i%6 == 0 {
+                @include make-indicator($i, │) {
+                    color: #d27d33;
+                }
+            } @else if $i%3 == 0 and $i%6 != 0 {
+                @include make-indicator($i, ✦) {
+                    color: #d27d33;
+                }
+            } @else {
+                @include make-indicator($i, ∙) {
+                    color: #FFF;
+                }
+            }
+
+        }
+    }
+}
+.numbers {
+    &__item {
+        position: absolute;
+        top: 50%;
+        left: 50%;  //點位在 clock__inside範圍的中心點
+
+        width: calc(100% - 5px);
+        height: calc(100% - 5px); //點位在 clock__inside 範圍左上角
+
+        text-align: center; //點位在 clock__inside 方形上邊的正中央
+
+        // &::before {
+        //     content: '13'; //變數
+        //     display: block;
+        //     color: #FFF;
+        //     font-size: 10px;
+        //     font-weight: bold;
+        //     transform: rotate(-30deg); //變數
+        // }
+        // &::after {
+        //     content: '1'; //變數
+        //     display: block;
+        //     color: #FFF;
+        //     font-size: 10px;
+        //     font-weight: bold;
+        //     transform: translateY(25px) rotate(-30deg); //變數
+        // }
+        // &--1 {
+        //     transform: translate(-50%,-50%) rotate(30deg); //變數
+        // }
+        // &--2 {
+        //     transform: translate(-50%,-50%) rotate(60deg); //變數
+        // }
+
+        @for $i from 1 through 12{
+            @include make-numbers($i);
+        }
+
+    }
+
+}
+
+//製作時針
+.hrHand {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    &__detail {
+        position: relative;
+        background-color: #FFF;
+        width: 8px;
+        height: 72px;
+        transform: translateY(calc(150px - 72px));
+        &::after {
+            content: '';
+            display: block;
+            background-color: #000;
+            width: 2px;
+            height: 45%;
+            position: absolute;
+            top: 4px;
+            left: 43%;
+        }
+    }
+}
+//製作分針
+.minHand {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    &__detail {
+        position: relative;
+        width: 8px;
+        height: 95px;
+        border-radius: 5px;
+        background-color: #f96f00;
+        transform: translateY(calc(150px - 95px));
+        &::after {
+            content: '';
+            display: block;
+            background-color: #FFF;
+            width: 2px;
+            height: 45%;
+            position: absolute;
+            left: 43%;
+            bottom: 4px;
+            transform: translateY(-50%);
+        }
+    }
+}
+//製作秒針
+.secHand {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    &__detail {
+        width: 13px;
+        height: 120px;
+        transform: translateY(calc(150px - 120px));
+    }
+}

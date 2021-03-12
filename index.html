@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>clock</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/clock.css">
+</head>
+<body>
+    <section> 
+        <div class="clock clock--radius shadow-s">
+            <div class="clock__inside">
+                <ul class="indicators">
+                </ul>
+                <ul class="numbers">
+                </ul>
+                <div class="hrHand">
+                    <div class="hrHand__detail"></div>
+                </div>
+                <div class="minHand">
+                    <div class="minHand__detail"></div>
+                </div>
+                <div class="secHand">
+                    <div class="secHand__detail">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13.251" height="126" viewBox="0 0 13.251 126">
+                            <defs>
+                                <style>
+                                    .a {
+                                        fill: #293b29;
+                                    }
+        
+                                    .a,
+                                    .b,
+                                    .c {
+                                        stroke: #b1ff00;
+                                    }
+        
+                                    .b {
+                                        fill: #b1ff00;
+                                    }
+        
+                                    .c,
+                                    .e {
+                                        fill: none;
+                                    }
+        
+                                    .d {
+                                        stroke: none;
+                                    }
+                                </style>
+                            </defs>
+                            <g transform="translate(646.618 400) rotate(180)">
+                                <g class="a" transform="translate(636 274)">
+                                    <circle class="d" cx="4" cy="4" r="4" />
+                                    <circle class="e" cx="4" cy="4" r="3.5" />
+                                </g>
+                                <g class="b" transform="translate(638 276)">
+                                    <circle class="d" cx="2" cy="2" r="2" />
+                                    <circle class="e" cx="2" cy="2" r="1.5" />
+                                </g>
+                                <path class="c" d="M0,3.61V50l6,8L-6,75l6,7v40" transform="translate(640 278)" />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 結構 -->
+    <!-- <ul class="indicators">
+        <li class="indicators__item indicators__item--1"></li>
+        <li class="indicators__item indicators__item--2"></li>
+    </ul> 
+    <ul class="numbers">
+        <li class="numbers__item numbers__item--1"></li>
+        <li class="numbers__item numbers__item--2"></li>
+    </ul>
+    -->
+
+
+    <script>
+        const indicators = document.querySelector('.indicators');
+        const numbers = document.querySelector('.numbers');
+
+        const hrHand = document.querySelector('.hrHand');
+        const minHand = document.querySelector('.minHand');
+        const secHand = document.querySelector('.secHand');
+
+        function makeIndicators(dom, count, className) {
+            // 跳出迴圈條件=> i= 1 && i跑完 count 次數
+            // (組裝(li)  -> 包裝送出(appendChild))
+            for(let i= 1; i <= count; i++) {
+                const li = document.createElement('li');
+                li.setAttribute('class', className);
+                dom.appendChild(li);
+            }
+            
+        }
+
+        function starClock() {
+            const d = new Date();
+            const hr = d.getHours();
+            const min = d.getMinutes();
+            const sec = d.getSeconds();
+            // console.log(d, hr, min, sec);
+            
+            //小時:每小時轉 30度 + 每分鐘轉 0.5度
+            const hrDeg = `${ (hr/12) * 360 + (min/60) * 30 }deg`;
+
+            //分鐘:每分鐘轉 6度 + 每秒鐘轉 0.1度
+            const minDeg = `${ (min/60) * 360 + (sec/60) * 6 }deg`;
+
+            //秒鐘:每秒鐘轉 6度
+            const secDeg = `${ (sec/60) * 360}deg`;
+
+
+            hrHand.style.transform = `rotate(${hrDeg})`;
+            minHand.style.transform = `rotate(${minDeg})`;
+            secHand.style.transform = `rotate(${secDeg})`;
+            // console.log(hrHand, minHand, secHand);
+
+            // window.requestAnimationFrame()方法通知瀏覽器我們想要產生動畫，並且要求瀏覽器在下次重繪畫面前呼叫特定函數更新動畫。這個方法接受一個引數作為下次重繪前調用的回呼函數。
+            window.requestAnimationFrame(starClock);
+
+        }
+        window.requestAnimationFrame(starClock);
+
+        makeIndicators(indicators, 72, 'indicators__item');
+        makeIndicators(numbers, 12, 'numbers__item');
+    </script>
+
+</body>
+</html>
